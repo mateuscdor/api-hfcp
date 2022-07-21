@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Whatsapp API Imagenet</title>
+	</head>
+	<body>
+
+		<div id="app">
+			<img src="" alt="QR Code" id="qrcode">
+			<img src="" alt="Check" id="check">
+			<br>
+			<h3>Logs:</h3>
+			<ul class="logs" id="log"></ul>
+		</div>
+        
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
+		<script>
+			const socket = io()
+			socket.on('qr', function(src) {
+				$('#qrcode').attr('src', src);
+				$('#qrcode').show();
+				$('#check').hide();
+				setTimeout(function(){
+				window.location.reload(true);
+				}, 5000);
+			});
+			socket.on('check', function(src) {
+				$('#check').attr('src', src);
+				$('#check').show();
+				$('#qrcode').hide();
+			});
+			socket.on('message', function(msg) {
+				$('.logs').append($('<li>').text(msg));
+			});
+		</script>
+	</body>
+</html>

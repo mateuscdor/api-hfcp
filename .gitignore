@@ -1,0 +1,9 @@
+# dependencies
+/node_modules
+
+/Sessions
+**/*bkp*
+
+package-lock.json
+postman.json
+
