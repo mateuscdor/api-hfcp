@@ -14,11 +14,13 @@ const P = require('pino')
 const mime = require('mime-types')
 const db = require('./mysql.js');
 const axios = require('axios');
-const port = '9888';
+require('dotenv').config();
+const port = process.env.SERVER_PORT;
 const Path = './Sessions/';
 const Auth = 'auth_info.json';
-const appName = "Imagenet Whats " + port;
-const log = 'silent';
+const appName = process.env.NAME + " " + port;
+const log = process.env.ERROR_LOG || 'silent';
+const logEnvio = process.env.SEND_LOG || false;
 app.use(express.json()); //parser used for requests via post,
 app.use("/assets", express.static(__dirname + "/assets"))
 app.use(express.urlencoded({ extended : true }));
@@ -140,6 +142,9 @@ app.post('/send-message', async function (req, res) {
         return_object = { status: false, message: 'Número indisponível ou bloqueado.' };
     } else {
         return_object = await conn.sendMessage(jid, options);
+        if (logEnvio) {
+            console.log('© BOT - Log envio:', return_object);
+        }
     }
 
     res.send(return_object);

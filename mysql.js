@@ -1,4 +1,5 @@
 const mysql = require('mysql2/promise');
+require('dotenv').config();
 
 const createConnection = async () => {
 	return await mysql.createConnection({
@@ -27,7 +28,7 @@ const getUser = async (user) => {
 
 const setUser = async (user) => {
 	const connection = await createConnection();
-	const [rows] = await connection.execute('INSERT INTO imagenet_user SET user = ?, porta = 4141', [user]);
+	const [rows] = await connection.execute('INSERT INTO imagenet_user SET user = ?, porta = ?', [user, process.env.SERVER_PORT]);
 	connection.end();
 	if (rows.length > 0) return rows[0].user;
 	return false;
