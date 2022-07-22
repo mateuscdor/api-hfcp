@@ -302,6 +302,7 @@ async function connectToWhatsApp() {
         version,
         browser: [appName, "MacOS", "3.0"],
         connectTimeoutMs: 60_000,
+        defaultQueryTimeoutMs: undefined,
         async getMessage(key) {
             return { conversation: 'botzg' };
         },
