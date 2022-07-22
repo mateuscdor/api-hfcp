@@ -45,7 +45,7 @@ app.post('/send-message', async function (req, res) {
     var return_object;
 
     const { state, saveCreds } = await useMultiFileAuthState(Path + Auth)
-    const conn = makeWaSocket({ auth: state, logger: P({ level: log }) })
+    const conn = makeWaSocket({ auth: state, logger: P({ level: log }), defaultQueryTimeoutMs: undefined })
     conn.ev.on('creds.update', saveCreds)
 
     let options = {
