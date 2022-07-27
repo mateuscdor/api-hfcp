@@ -28,7 +28,7 @@ const getUser = async (user) => {
 
 const setUser = async (user) => {
 	const connection = await createConnection();
-	const [rows] = await connection.execute('INSERT INTO imagenet_user SET user = ?, porta = ?', [user, process.env.SERVER_PORT]);
+	const [rows] = await connection.execute('INSERT INTO imagenet_user SET user = ?, porta = ?', [user, process.env.PORT]);
 	connection.end();
 	if (rows.length > 0) return rows[0].user;
 	return false;

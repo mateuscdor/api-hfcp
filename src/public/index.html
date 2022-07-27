@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/global.css">
+
+    <!-- SOCKET.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io()
+    </script>
+</head>
+<body>    
+    <div id="wrapper" class="container-fluid row">
+        <div class="col-md-6">
+            <form id="token-form">
+                <div>
+                    Identificação
+                    <br />
+                    <input type="text" name="token" value="teste" class="form-control mb-2">
+                    <button type="submit" name="submit" class="btn btn-sm btn-primary">Conectar</button>
+                    <button type="button" name="delete" class="btn btn-sm btn-danger delete-token">Deletar</button>
+                </div>
+                <div>
+                    <label for="">Esta conexão está identificada como:</label>
+                    <br />
+                    <input id="token" type="text" value="teste" placeholder="Identificação" class="form-control" disabled>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <div id="qrcode-container">
+                <img id="qrcode" src="/imagenet-mascote.png" alt="" style="max-height: 180px;">
+            </div>
+        </div>
+    
+    </div>
+    
+    <pre id="pre"></pre>
+    
+    <script>
+        // prompter optional
+        const pre = document.querySelector('#pre')
+        // element token or your PHP session/database token
+        const checkToken = document.querySelector('#token')
+        // element image
+        const qrcode = document.querySelector('#qrcode')
+        // element post or when the button hit to post create-instance
+        const form = document.querySelector('#token-form')
+        if ( form ) form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            const token = document.querySelector('input[name="token"]')
+            if (token.value) {
+                checkToken.value = token.value
+                const req = await fetch('/create-instance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({token: token.value})
+                })
+                // result as json
+                const res = await req.json()
+                if (res.qrcode) { // if result has qrcode
+                    qrcode.src = res.qrcode // set element image src to res.qrcode
+                }
+                // diplay result to prompter
+                return pre.innerHTML = JSON.stringify(res, undefined, 2)
+            }
+            pre.innerHTML = JSON.stringify({message: 'Token must not be empty'}, undefined, 2)
+        })
+
+        // delete token / delete instance
+        const deleteToken = document.querySelector('.delete-token')
+        if ( deleteToken ) deleteToken.addEventListener('click', async () => {
+            if ( checkToken.value ) {
+                const req = await fetch('/delete-credential', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic TmRhbHUtc2VydmVyLXVVZGtmZ2xpNzgzcGtmbmxhc2tvZ29pZ2hyOg=='
+                    },
+                    body: JSON.stringify({token: checkToken.value})
+                })
+                const res = await req.json()
+                pre.innerHTML = JSON.stringify(res, undefined, 2)
+                qrcode.src = "/imagenet-mascote.png"
+            } else {
+                pre.innerHTML = JSON.stringify({
+                    message: 'Cannot delete empty token'
+                }, undefined, 2)
+            }
+        })
+
+        // CONSUME SOCKET IO CLIENT SIDE START
+        // to receiving message from server
+        socket.on('message', (data) => {
+            pre.innerHTML = JSON.stringify(data, undefined, 2)
+            if (data.error) {
+                // console.log(data)
+                qrcode.src = "/imagenet-mascote.png"
+            }
+        })
+
+        // to receiving whatsapp message from server ( watching whatsapp activity like receiving message, sending message, status@broadcast etc)
+        socket.on('message-upsert', (data) => {
+            pre.innerHTML = JSON.stringify(data, undefined, 2)
+        })
+
+        // to receiving qrcode when starting connection
+        socket.on('qrcode', (data) => {
+            qrcode.src = data.data
+            pre.innerHTML = JSON.stringify(data, undefined, 2)
+        })
+
+        // when connection open, show the user and ppUrl
+        socket.on('connection-open', (data) => {
+            pre.innerHTML = JSON.stringify(data, undefined, 2)
+            qrcode.src = data.ppUrl
+        })
+
+    </script>
+
+</body>
+</html>

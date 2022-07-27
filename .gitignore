@@ -1,11 +1,7 @@
-# dependencies
 /node_modules
+/credentials
 
-/Sessions
 **/*bkp*
 
 package-lock.json
 postman.json
-
-.env
-
