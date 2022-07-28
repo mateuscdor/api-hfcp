@@ -30,7 +30,7 @@ const sendText = async (req, res) => {
     const {number, message } = req.body
 
     if (number && message ) {
-        const sendingTextMessage = await wa.sendText(number + (!number.endsWith('@s.whatsapp.net') ? '@s.whatsapp.net' : ''), message)
+        const sendingTextMessage = await wa.sendText(number + (!number.endsWith('@s.whatsapp.net') ? '@s.whatsapp.net' : ''), message, req.io)
         if (sendingTextMessage) {
             return res.send({status: true, data: sendingTextMessage})
         }
