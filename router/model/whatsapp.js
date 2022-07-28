@@ -285,7 +285,7 @@ const connectToWhatsApp = async (id, io) => {
 }
 
 // text message
-async function sendText(number, text) {
+async function sendText(number, text, io) {
 
     try {
         if (Array.isArray(number)) {
