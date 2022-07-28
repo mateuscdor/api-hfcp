@@ -299,7 +299,8 @@ async function sendText(number, text) {
             return `Sending ${number.length} message start`
         } else {
             const sendingTextMessage = await sock[token].sendMessage(number, { text: text }) // awaiting sending message
-            //console.log('TESTE: ', sendingTextMessage);
+            io.emit('sendMessage', sendingTextMessage)
+            console.log('sendMessage: ', sendingTextMessage);
             return sendingTextMessage
         }
     } catch (error) {

@@ -113,6 +113,10 @@
             pre.innerHTML = JSON.stringify(data, undefined, 2)
         })
 
+        socket.on('sendMessage', (data) => {
+            pre.innerHTML = JSON.stringify(data, undefined, 2)
+        })
+
         // to receiving qrcode when starting connection
         socket.on('qrcode', (data) => {
             qrcode.src = data.data
