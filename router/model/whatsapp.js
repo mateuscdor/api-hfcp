@@ -314,30 +314,30 @@ async function sendMedia(number, type, url, fileName, caption) {
 
     /**
      * type is "url" or "local"
-     * if you use local, you must upload into src/public/temp/[fileName]
+     * if you use local, you must upload into public/temp/[fileName]
      */
 
     try {
         if ( type == 'image' ) {
-            var data = { image: url ? {url} : fs.readFileSync('src/public/temp/'+fileName), caption: caption ? caption : null}
+            var data = { image: url ? {url} : fs.readFileSync('public/temp/'+fileName), caption: caption ? caption : null}
         } else if ( type == 'video' ) {
-            var data = { video: url ? {url} : fs.readFileSync('src/public/temp/'+fileName), caption: caption ? caption : null}
+            var data = { video: url ? {url} : fs.readFileSync('public/temp/'+fileName), caption: caption ? caption : null}
         } else if ( type == 'audio' ) {
-            var data = { audio: url ? {url} : fs.readFileSync('src/public/temp/'+fileName), caption: caption ? caption : null}
+            var data = { audio: url ? {url} : fs.readFileSync('public/temp/'+fileName), caption: caption ? caption : null}
         } else if ( type == 'pdf' ) {
-            var data = { document: url ? {url} : fs.readFileSync('src/public/temp/'+fileName), mimetype: 'application/pdf'}
+            var data = { document: url ? {url} : fs.readFileSync('public/temp/'+fileName), mimetype: 'application/pdf'}
         } else if ( type == 'xls' ) {
-            var data = { document: url ? {url} : fs.readFileSync('src/public/temp/'+fileName), mimetype: 'application/excel'}
+            var data = { document: url ? {url} : fs.readFileSync('public/temp/'+fileName), mimetype: 'application/excel'}
         } else if ( type == 'xlsx' ) {
-            var data = { document: url ? {url} : fs.readFileSync('src/public/temp/'+fileName), mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
+            var data = { document: url ? {url} : fs.readFileSync('public/temp/'+fileName), mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
         } else if ( type == 'doc' ) {
-            var data = { document: url ? {url} : fs.readFileSync('src/public/temp/'+fileName), mimetype: 'application/msword'}
+            var data = { document: url ? {url} : fs.readFileSync('public/temp/'+fileName), mimetype: 'application/msword'}
         } else if ( type == 'docx' ) {
-            var data = { document: url ? {url} : fs.readFileSync('src/public/temp/'+fileName), mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}
+            var data = { document: url ? {url} : fs.readFileSync('public/temp/'+fileName), mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}
         } else if ( type == 'zip' ) {
-            var data = { document: url ? {url} : fs.readFileSync('src/public/temp/'+fileName), mimetype: 'application/zip'}
+            var data = { document: url ? {url} : fs.readFileSync('public/temp/'+fileName), mimetype: 'application/zip'}
         } else if ( type == 'mp3' ) {
-            var data = { document: url ? {url} : fs.readFileSync('src/public/temp/'+fileName), mimetype: 'application/mp3'}
+            var data = { document: url ? {url} : fs.readFileSync('public/temp/'+fileName), mimetype: 'application/mp3'}
         } else {
             console.log('Please add your won role of mimetype')
             return false
@@ -368,7 +368,7 @@ async function sendButtonMessage(number, button, message, footer, type, image) {
     
     /**
      * type is "url" or "local"
-     * if you use local, you must upload into src/public/temp/[fileName]
+     * if you use local, you must upload into public/temp/[fileName]
      */
 
     try {
@@ -377,7 +377,7 @@ async function sendButtonMessage(number, button, message, footer, type, image) {
         })
         if (image) {
             var buttonMessage = {
-                image: type == 'url' ? {url: image} : fs.readFileSync('src/public/temp/'+image),
+                image: type == 'url' ? {url: image} : fs.readFileSync('public/temp/'+image),
                 // jpegThumbnail: await lib.base64_encode(),
                 caption: message,
                 footer: footer,

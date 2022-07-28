@@ -26,9 +26,9 @@
   "author": "ndalu-id <tofiknuryanto@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "win-dev": "set NODE_ENV=development&&nodemon src/index.js",
-    "dev": "NODE_ENV=development nodemon src/index.js",
-    "start": "node src/index.js"
+    "win-dev": "set NODE_ENV=development&&nodemon index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "start": "node index.js"
   },
   "nodemonConfig": {
     "ignore": [

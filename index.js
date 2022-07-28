@@ -68,7 +68,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.use(express.static('src/public'))
+app.use(express.static('public'))
 app.use(require('./router'))
 
 app.get('/*', (req, res) => {
