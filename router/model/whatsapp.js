@@ -308,8 +308,8 @@ async function sendText(number, text, urlButton, textButton, io) {
             }
             return `Sending ${number.length} message start`
         } else {
-            console.log('TESTE', data);
-            const sendingTextMessage = await sock[token].sendMessage(number, data) // awaiting sending message
+            let sendingTextMessage = {}
+            sendingTextMessage = await sock[token].sendMessage(number, data) // awaiting sending message
             io.emit('sendMessage', sendingTextMessage)
             console.log('sendMessage: ', sendingTextMessage);
             return sendingTextMessage
