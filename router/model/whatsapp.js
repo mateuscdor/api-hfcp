@@ -27,7 +27,7 @@ const db = require('./mysql')
  const logger = MAIN_LOGGER.child({ })
 //  logger.level = 'trace'
  
-const useStore = !process.argv.includes('--no-store')
+const useStore = false//!process.argv.includes('--no-store')
 
 const groupCheck = (jid) => {
     const regexp = new RegExp(/^\d{18}@g.us$/)
@@ -285,20 +285,31 @@ const connectToWhatsApp = async (id, io) => {
 }
 
 // text message
-async function sendText(number, text, io) {
+async function sendText(number, text, urlButton, textButton, io) {
 
     try {
+        var data = { text: text }
+        if(urlButton){
+            data.templateButtons = [{
+                index: 1,
+                urlButton: { 
+                    displayText: textButton ? textButton : "Acessar link", 
+                    url: urlButton 
+                }
+            }]
+        }
         if (Array.isArray(number)) {
             for ( let i = 0;  i < number.length; i++ ) {
                 const random = Math.floor(Math.random() * (process.env.MAX - process.env.MIN + 1) + process.env.MIN)
                 const delay = i * 1000 * random
                 setTimeout(async () => {
-                    await sock[token].sendMessage(number[i], { text: text })
+                    await sock[token].sendMessage(number[i], data)
                 }, delay)
             }
             return `Sending ${number.length} message start`
         } else {
-            const sendingTextMessage = await sock[token].sendMessage(number, { text: text }) // awaiting sending message
+            console.log('TESTE', data);
+            const sendingTextMessage = await sock[token].sendMessage(number, data) // awaiting sending message
             io.emit('sendMessage', sendingTextMessage)
             console.log('sendMessage: ', sendingTextMessage);
             return sendingTextMessage
