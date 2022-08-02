@@ -316,6 +316,7 @@ async function sendText(number, text, urlButton, textButton, io) {
             sendingTextMessage = await sock[token].sendMessage(number, data).then(function (response) {
                 // handle success
                 //console.log('ok', response);
+                return response;
             })
             .catch(function (error) {
                 console.log('ERRO ENVIO', error);
