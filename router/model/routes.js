@@ -14,7 +14,7 @@ const createInstance = async (req, res) => {
             return res.send({
                 status: status,
                 qrcode: connect?.qrcode,
-                message: message ? message : 'Processing'
+                message: message ? message : 'Processando'
             })
         } catch (error) {
             console.log(error)
@@ -47,9 +47,9 @@ const sendMedia = async (req, res) => {
     if ( token && number && type && url && caption ) {
         const sendingMediaMessage = await wa.sendMedia(token, number, type, url, fileName, caption)
         if (sendingMediaMessage) return res.send({status: true, data: sendingMediaMessage})
-        return res.send({status: false, message: 'Check your connection'})
+        return res.send({status: false, message: 'Check sua conexão'})
     }
-    res.send({status: false, message: 'Check your parameter'})
+    res.send({status: false, message: 'Verifique os parâmetros enviados'})
 
 }
 
@@ -60,9 +60,9 @@ const sendButtonMessage = async (req, res) => {
     if ( token && number && button && message && footer ) {
         const sendButtonMessage = await wa.sendButtonMessage(token, number, button, message, footer, type, image)
         if (sendButtonMessage) return res.send({status: true, data: sendButtonMessage})
-        return res.send({status: false, message: 'Check your connection'})
+        return res.send({status: false, message: 'Check sua conexão'})
     }
-    res.send({status: false, message: 'Check your parameter'})
+    res.send({status: false, message: 'Verifique os parâmetros enviados'})
 
 }
 
@@ -73,9 +73,9 @@ const sendTemplateMessage = async (req, res) => {
     if ( token && number && button && text && footer ) {
         const sendTemplateMessage = await wa.sendTemplateMessage( token, number, button, text, footer, image )
         if (sendTemplateMessage) return res.send({status: true, data: sendTemplateMessage})
-        return res.send({status: false, message: 'Check your connection'})
+        return res.send({status: false, message: 'Check sua conexão'})
     }
-    res.send({status: false, message: 'Check your parameter'})
+    res.send({status: false, message: 'Verifique os parâmetros enviados'})
 
 }
 
@@ -86,9 +86,9 @@ const sendListMessage = async (req, res) => {
     if ( token && number && list && text && footer && title && buttonText ) {
         const sendListMessage = await wa.sendListMessage(token, number, list, text, footer, title, buttonText)
         if ( sendListMessage ) return res.send({status: true, data: sendListMessage})
-        return res.send({status: false, message: 'Check your connection'})
+        return res.send({status: false, message: 'Check sua conexão'})
     }
-    res.send({status: false, message: 'Check your parameter'})
+    res.send({status: false, message: 'Verifique os parâmetros enviados'})
 
 }
 
@@ -99,9 +99,9 @@ const sendReaction = async (req, res) => {
     if ( token && number && text && key ) {
         const sendReaction = await wa.sendReaction(token, number, text, key)
         if ( sendReaction ) return res.send({status: true, data: sendReaction})
-        return res.send({status: false, message: 'Check your connection'})
+        return res.send({status: false, message: 'Check sua conexão'})
     }
-    res.send({status: false, message: 'Check your parameter'})
+    res.send({status: false, message: 'Verifique os parâmetros enviados'})
 
 }
 
@@ -112,9 +112,9 @@ const isExists = async (req, res) => {
     if ( token && number ) {
         const isExists = await wa.isExist(token, number)
         if (isExists) return res.send({status: true, data: isExists})
-        return res.send({status: false, message: 'Check your connection'})
+        return res.send({status: false, message: 'Check sua conexão'})
     }
-    res.send({status: false, message: 'Check your parameter'})
+    res.send({status: false, message: 'Verifique os parâmetros enviados'})
 
 }
 
@@ -125,9 +125,9 @@ const getPpUrl = async (req, res) => {
     if ( token && number && highrest ) {
         const getPpUrl = await wa.getPpUrl(token, number, highrest)
         if ( getPpUrl ) return res.send({status: true, data: getPpUrl})
-        return res.send({status: false, message: 'Check your connection'})
+        return res.send({status: false, message: 'Check sua conexão'})
     }
-    res.send({status: false, message: 'Check your parameter'})
+    res.send({status: false, message: 'Verifique os parâmetros enviados'})
 
 }
 
@@ -138,9 +138,9 @@ const deleteEveryOne = async (req, res) => {
     if ( token && number && key ) {
         const deleteEveryOne = await wa.deleteEveryOne(token, number, key)
         if ( deleteEveryOne ) return res.send({status: true, data: deleteEveryOne})
-        return res.send({status: false, message: 'Check your connection'})
+        return res.send({status: false, message: 'Check sua conexão'})
     }
-    res.send({status: false, message: 'Check your parameter'})
+    res.send({status: false, message: 'Verifique os parâmetros enviados'})
 
 }
 
@@ -150,9 +150,9 @@ const groupMetadata = async (req, res) => {
     if (token && number) {
         const groupMetadata = await wa.groupMetadata(token, number)
         if ( groupMetadata ) return res.send({status: true, data: groupMetadata})
-        return res.send({status: false, message: 'Check your connection'})
+        return res.send({status: false, message: 'Check sua conexão'})
     }
-    res.send({status: false, message: 'Check your parameter'})
+    res.send({status: false, message: 'Verifique os parâmetros enviados'})
 
 }
 
@@ -162,9 +162,9 @@ const deleteCredentials = async (req, res) => {
     if (token) {
         const deleteCredentials = await wa.deleteCredentials(token)
         if ( deleteCredentials ) return res.send({status: true, data: deleteCredentials})
-        return res.send({status: false, message: 'Check your connection'})
+        return res.send({status: false, message: 'Check sua conexão'})
     }
-    res.send({status: false, message: 'Check your parameter'})
+    res.send({status: false, message: 'Verifique os parâmetros enviados'})
 
 }
 

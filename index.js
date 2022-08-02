@@ -3,14 +3,14 @@
 const fs = require('fs')
 // check .env config
 if ( !fs.existsSync('.env') ) {
-    console.log('----------\n> env is not found\n> EXITED\n----------')
+    console.log('----------\n>Arquivo .env não encontrado\n> EXITED\n----------')
     process.exit(0)
 }
 // check folder credentials
 if ( !fs.existsSync('credentials') ) {
-    console.log('----------\n> credentials folder is not found\n----------')
+    console.log('----------\n> diretório credentials não encontrada\n----------')
     fs.mkdirSync('credentials')
-    console.log('----------\n> credentials folder is created\n----------')
+    console.log('----------\n> diretório credentials criada\n----------')
 }
 
 require('dotenv').config()
@@ -23,10 +23,10 @@ global.log = lib.log
 const port = process.env.PORT
 
 if ( !port ) {
-    log.fatal('PLEACE CHECK YOUR .env FILE')
+    log.fatal('Verifique seu arquivo .env')
     process.exit(1)
 }
-log.info('YOUR .env FILE is configured')
+log.info('Seu arquivo .env está configurado')
 
 /**
  * EXPRESS FOR ROUTING
@@ -77,7 +77,7 @@ app.get('/*', (req, res) => {
 
 // console.log(process.argv)
 
-server.listen(port, log.info(`Server run and listening port: ${port}`))
+server.listen(port, log.info(`Servidor rodando na porta: ${port}`))
 
 function autostartInstance() {
 
@@ -92,11 +92,11 @@ function autostartInstance() {
     token = token.map( x => x.split('.')[0])
 
     // looping credentials to reconnecting
-    lib.log.info(`Found ${token.length} credential${token.length > 1 ? '\'s' : ''}`)
+    lib.log.info(`Encontrado ${token.length} credencia${token.length > 1 ? '\'is' : 'l'}`)
     for ( let i = 0; i < token.length; i++ ) {
         const delay = i * 2000 // set delay 2 second each credentials. You can edit here for the delay
         setTimeout(async() => {
-            lib.log.info(`Reconnecting session ${token[i]}`)
+            lib.log.info(`Reconectando sessão ${token[i]}`)
             await wa.connectToWhatsApp(token[i], io).catch(err => lib.log.error(err))
             scheduler.autostartScheduler(token[i])
         }, delay)

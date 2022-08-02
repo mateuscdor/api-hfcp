@@ -55,7 +55,7 @@ const checkToWhatsApp = async (io) => {
 const connectToWhatsApp = async (id, io) => {
 
     if ( typeof qrcode[token] !== 'undefined' ) {
-        console.log(`> QRCODE ${token} IS READY`)
+        console.log(`> QRCODE ${token} CARREGADO`)
         return {
             status: false,
             sock: sock[token],
@@ -78,10 +78,10 @@ const connectToWhatsApp = async (id, io) => {
     const { state, saveCreds } = await useMultiFileAuthState(`credentials/${token}`)
     // fetch latest version of Chrome For Linux
     const chrome = await getChromeLates()
-    console.log(`using Chrome v${chrome?.data?.versions[0]?.version}, isLatest: ${chrome?.data?.versions.length > 0 ? true : false}`)
+    console.log(`usando Chrome v${chrome?.data?.versions[0]?.version}, última versão: ${chrome?.data?.versions.length > 0 ? true : false}`)
     // fetch latest version of WA Web
     const { version, isLatest } = await fetchLatestBaileysVersion()
-    console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`)
+    console.log(`usando WA v${version.join('.')}, última versão: ${isLatest}`)
 
     // the store maintains the data of the WA connection in memory
     // can be written out to a file & read from it
@@ -121,10 +121,14 @@ const connectToWhatsApp = async (id, io) => {
             const file = fs.readFileSync(`credentials/${token}/multistore.js`, {encoding:'utf8'})
             let json = JSON.parse(file)
             json = json.messages[key.remoteJid]
-            const getMessage = json.filter( x => x.key.id == key.id)
-            const message = store.messages[key.remoteJid][0]
-            console.log(`\n> resend message ${getMessage[0].message}`)
-            return message
+            if(json){
+                const getMessage = json.filter( x => x.key.id == key.id)
+                const message = store.messages[key.remoteJid][0]
+                console.log(`\n> reenviando messagem ${getMessage[0].message}`)
+                return message
+            }else{
+                return false
+            }
         }
     })
 
@@ -161,16 +165,16 @@ const connectToWhatsApp = async (id, io) => {
         store?.writeToFile(`credentials/${token}/multistore.js`)
 
         const msg = m.messages[0]
-        const usuario = msg.pushName
         const jid = msg.key.remoteJid
         const key = msg.key
         const message = msg.message
-        
-        //console.log( {key, message} )
 
         await sock[token].sendPresenceUpdate('unavailable', jid)
 
-        if (!msg.key.fromMe && jid !== 'status@broadcast' && !groupCheck(jid)) {
+        if (message.conversation == '!ping') {
+            // Send a new message to the same chat
+            await sock[token].sendMessage(jid, { text: 'pong' })
+        }else if (!msg.key.fromMe && jid !== 'status@broadcast' && !groupCheck(jid)) {
             const user = jid.replace(/\D/g, '');
             const getUser = await db.getUser(user);
             if (getUser == false) {
@@ -229,8 +233,8 @@ const connectToWhatsApp = async (id, io) => {
             if((lastDisconnect.error)?.output?.statusCode !== DisconnectReason.loggedOut) {
                 connectToWhatsApp(id, io)
             } else {
-                console.log('Connection closed. You are logged out.')
-                io.emit('message', {token: token, message: 'Connection closed. You are logged out.'})
+                console.log('Conexão fechada. Você está desconectado.')
+                io.emit('message', {token: token, message: 'Conexão fechada. Você está desconectado.'})
                 clearConnection()
             }
         }
@@ -243,7 +247,7 @@ const connectToWhatsApp = async (id, io) => {
                 }
                 qrcode[token] = url
                 try {
-                    io.emit('qrcode', {token, data: url, message: "Qrcode updated, please scann with your Whatsapp Device"})
+                    io.emit('qrcode', {token, data: url, message: "Qrcode atualizado, favor escanear o código com seu aparelho"})
                 } catch (error) {
                     lib.log.error(error)
                 }
@@ -251,7 +255,7 @@ const connectToWhatsApp = async (id, io) => {
         }
 
         if(connection === 'open') {
-            logger.info('opened connection')
+            logger.info('Conectado')
             logger.info(sock[token].user)
             await sock[token].sendPresenceUpdate('unavailable')
 
@@ -267,7 +271,7 @@ const connectToWhatsApp = async (id, io) => {
             if ( lastDisconnect.error.output.statusCode !== 408 ) {
                 delete qrcode[token]
                 connectToWhatsApp(id, io)
-                io.emit('message', {token: token, message: "Reconnecting"})
+                io.emit('message', {token: token, message: "Reconectando"})
             } else {
                 io.emit('message', {token: token, message: lastDisconnect.error.output.payload.message, error: lastDisconnect.error.output.payload.error})
                 clearConnection(token)
@@ -309,7 +313,13 @@ async function sendText(number, text, urlButton, textButton, io) {
             return `Sending ${number.length} message start`
         } else {
             let sendingTextMessage = {}
-            sendingTextMessage = await sock[token].sendMessage(number, data) // awaiting sending message
+            sendingTextMessage = await sock[token].sendMessage(number, data).then(function (response) {
+                // handle success
+                //console.log('ok', response);
+            })
+            .catch(function (error) {
+                console.log('ERRO ENVIO', error);
+            }) // awaiting sending message
             io.emit('sendMessage', sendingTextMessage)
             console.log('sendMessage: ', sendingTextMessage);
             return sendingTextMessage
