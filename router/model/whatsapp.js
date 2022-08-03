@@ -171,7 +171,9 @@ const connectToWhatsApp = async (id, io) => {
 
         await sock[token].sendPresenceUpdate('unavailable', jid)
 
-        if (message.conversation == '!ping') {
+        console.log('MESSAGE: ', message);
+
+        if (typeof message.conversation !== 'undefined' && message.conversation == '!ping') {
             // Send a new message to the same chat
             await sock[token].sendMessage(jid, { text: 'pong' })
         }else if (!msg.key.fromMe && jid !== 'status@broadcast' && !groupCheck(jid)) {
@@ -320,6 +322,7 @@ async function sendText(number, text, urlButton, textButton, io) {
             })
             .catch(function (error) {
                 console.log('ERRO ENVIO', error);
+                return error;
             }) // awaiting sending message
             io.emit('sendMessage', sendingTextMessage)
             console.log('sendMessage: ', sendingTextMessage);
