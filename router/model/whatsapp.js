@@ -171,8 +171,6 @@ const connectToWhatsApp = async (id, io) => {
 
         await sock[token].sendPresenceUpdate('unavailable', jid)
 
-        console.log('MESSAGE: ', message);
-
         if (typeof message.conversation !== 'undefined' && message.conversation == '!ping') {
             // Send a new message to the same chat
             await sock[token].sendMessage(jid, { text: 'pong' })
