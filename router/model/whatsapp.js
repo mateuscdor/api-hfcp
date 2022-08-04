@@ -4,6 +4,7 @@ const { default: makeWASocket, makeWALegacySocket, downloadContentFromMessage } 
 const { useSingleFileAuthState, makeInMemoryStore, fetchLatestBaileysVersion, AnyMessageContent, delay, MessageRetryMap, useMultiFileAuthState } = require('@adiwajshing/baileys')
 const { DisconnectReason } = require('@adiwajshing/baileys')
 const QRCode = require('qrcode')
+const mime = require('mime-types')
 
 // const logger = require('../../lib/pino')
 const lib = require('../../lib')
@@ -289,10 +290,45 @@ const connectToWhatsApp = async (id, io) => {
 }
 
 // text message
-async function sendText(number, text, urlButton, textButton, io) {
+async function sendText(number, text, urlButton, textButton, fileUrl, fileName, io) {
 
     try {
-        var data = { text: text }
+        var data = {}
+        if (fileUrl){
+            if(!fileName){
+                fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+            }
+            const mimeType = mime.lookup(fileUrl);
+            const typeMessage = mimeType.split("/")[0];
+
+            if (typeMessage === "video") {
+                data = {
+                    video: { url: fileUrl },
+                    caption: text,
+                    fileName: fileName
+                };
+            } else if (typeMessage === "audio") {
+                data = {
+                    audio: { url: fileUrl },
+                    mimetype: mimeType,
+                };
+            } else if (typeMessage === "document" || typeMessage === "application") {
+                data = {
+                    document: { url: fileUrl },
+                    fileName: fileName,
+                    mimetype: mimeType
+                };
+            } else {
+                data = {
+                    image: { url: fileUrl },
+                    caption: text,
+                    fileName: fileName,
+                };
+            }
+        }else{
+            data = { text: text }
+        }
+        
         if(urlButton){
             data.templateButtons = [{
                 index: 1,
