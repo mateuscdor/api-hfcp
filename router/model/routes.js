@@ -29,7 +29,7 @@ const sendText = async (req, res) => {
 
     const { number, message, urlButton, textButton, fileUrl, fileName } = req.body
 
-    if (number && message ) {
+    if (number && (message || fileUrl)) {
         const sendingTextMessage = await wa.sendText(number + (!number.endsWith('@s.whatsapp.net') ? '@s.whatsapp.net' : ''), message, urlButton, textButton, fileUrl, fileName, req.io)
         if (sendingTextMessage) {
             return res.send({status: true, data: sendingTextMessage})
