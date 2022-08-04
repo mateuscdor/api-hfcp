@@ -189,7 +189,7 @@ const connectToWhatsApp = async (id, io) => {
                         console.log('erro', error);
                     })
             }
-            console.log('message-upsert: ', sendingTextMessage);
+            console.log('message-upsert: ', { token, key, message });
             io.emit('message-upsert', {token, key, message})
         }
 
