@@ -590,9 +590,21 @@ async function getPpUrl(number, highrest) {
         if (highrest) {
             // for high res picture
             ppUrl = await sock[token].profilePictureUrl(number, 'image')
+                .then(function (response) {
+                    return response
+                })
+                .catch(function (error) {
+                    return 'https://imagenet.com.br/view/imagens/imagenet-logotipo.png'
+                })
         } else {
             // for low res picture
             ppUrl = await sock[token].profilePictureUrl(number)
+                .then(function (response) {
+                    return response
+                })
+                .catch(function (error) {
+                    return 'https://imagenet.com.br/view/imagens/imagenet-logotipo.png'
+                })
         }
 
         return ppUrl
