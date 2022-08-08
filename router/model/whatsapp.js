@@ -26,7 +26,7 @@ const db = require('./mysql')
  const MAIN_LOGGER = require('../../lib/pino')
  
  const logger = MAIN_LOGGER.child({ })
-//  logger.level = 'trace'
+logger.level = process.env.LOG_GERAL
  
 const useStore = false//!process.argv.includes('--no-store')
 
@@ -189,8 +189,10 @@ const connectToWhatsApp = async (id, io) => {
                         console.log('erro', error);
                     })
             }
-            console.log('message-upsert: ', { token, key, message });
-            io.emit('message-upsert', {token, key, message})
+            if (process.env.LOG_RECEBIMENTO){
+                console.log('message-upsert: ', { token, key, message });
+                io.emit('message-upsert', {token, key, message})
+            }
         }
 
         /** START WEBHOOK */
@@ -359,8 +361,10 @@ async function sendText(number, text, urlButton, textButton, fileUrl, fileName, 
                 console.log('ERRO ENVIO', error);
                 return error;
             }) // awaiting sending message
-            io.emit('sendMessage', sendingTextMessage)
-            console.log('sendMessage: ', sendingTextMessage);
+            if (process.env.LOG_ENVIO) {
+                io.emit('sendMessage', sendingTextMessage)
+                console.log('sendMessage: ', sendingTextMessage);
+            }
             return sendingTextMessage
         }
     } catch (error) {
