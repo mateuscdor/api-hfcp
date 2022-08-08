@@ -188,8 +188,8 @@ const connectToWhatsApp = async (id, io) => {
                     .catch(function (error) {
                         console.log('erro', error);
                     })
-            }
-            if (process.env.LOG_RECEBIMENTO){
+            }            
+            if (process.env.LOG_RECEBIMENTO === 'true'){
                 console.log('message-upsert: ', { token, key, message });
                 io.emit('message-upsert', {token, key, message})
             }
@@ -361,7 +361,7 @@ async function sendText(number, text, urlButton, textButton, fileUrl, fileName, 
                 console.log('ERRO ENVIO', error);
                 return error;
             }) // awaiting sending message
-            if (process.env.LOG_ENVIO) {
+            if (process.env.LOG_ENVIO === 'true') {
                 io.emit('sendMessage', sendingTextMessage)
                 console.log('sendMessage: ', sendingTextMessage);
             }
