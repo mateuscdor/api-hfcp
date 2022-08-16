@@ -352,6 +352,21 @@ async function sendText(number, text, urlButton, textButton, fileUrl, fileName, 
             return `Sending ${number.length} message start`
         } else {
             let sendingTextMessage = {}
+            /* await sock[token].waitForConnectionUpdate(function ({ connection }) { console.log('TESTE', connection); return connection === "open"} ).then(function (response) {
+                console.log('OK', response);
+                return response;
+            })
+            .catch(function (error) {
+                console.log('ERRO ENVIO', error);
+                return error;
+            }) */
+
+            await sock[token].presenceSubscribe(number)
+            await delay(500)
+            await sock[token].sendPresenceUpdate('composing', number)
+            await delay(1000)
+            await sock[token].sendPresenceUpdate('paused', number)
+
             sendingTextMessage = await sock[token].sendMessage(number, data).then(function (response) {
                 // handle success
                 //console.log('ok', response);

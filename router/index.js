@@ -2,6 +2,17 @@
 
 const express = require('express')
 const router = express.Router()
+const session = require('express-session');
+const path = require('path');
+
+router.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
+router.use(express.static(path.join(__dirname, 'static')));
 
 /**
  * THIS IS MAIN ROUTER
@@ -13,8 +24,29 @@ const CryptoJS = require("crypto-js")
 
 // sendFile will from here. Delete or comment if no use anymore
 router.get('/', (req, res) => {
-    const path = require('path')
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    if (req.session && req.session.loggedin && req.session.token === process.env.TOKEN) {
+        res.sendFile(path.join(__dirname, '../public/home.html'));
+    } else {
+        res.sendFile(path.join(__dirname, '../public/login.html'));
+    }
+})
+
+router.post('/', (req, res) => {
+    let token = req.body.token;
+    if (token) {
+        if (token === process.env.TOKEN) {
+            // Authenticate the user
+            req.session.loggedin = true;
+            req.session.token = token;
+            res.redirect('/');
+        } else {
+            res.send('Tokem inválido!');
+            res.end();
+        }
+    } else {
+        res.send('Informe um token!');
+        res.end();
+    }
 })
 
 // Check headers post from your PHP backend, don't forget to get

@@ -6,7 +6,7 @@ const lib = require('../../lib')
 const createInstance = async (req, res) => {
 
     const { token } = req.body
-    if ( token ) {
+    if (token && req.session && req.session.loggedin && req.session.token === process.env.TOKEN) {
         try {
             const connect = await wa.connectToWhatsApp(token, req.io)
             const status = connect?.status
@@ -158,8 +158,7 @@ const groupMetadata = async (req, res) => {
 
 const deleteCredentials = async (req, res) => {
     const { token } = req.body
-
-    if (token) {
+    if (token && req.session && req.session.loggedin && req.session.token === process.env.TOKEN) {
         const deleteCredentials = await wa.deleteCredentials(token)
         if ( deleteCredentials ) return res.send({status: true, data: deleteCredentials})
         return res.send({status: false, message: 'Check sua conexão'})
