@@ -239,7 +239,7 @@ const connectToWhatsApp = async (id, io) => {
             } else {
                 console.log('Conexão fechada. Você está desconectado.')
                 io.emit('message', {token: token, message: 'Conexão fechada. Você está desconectado.'})
-                clearConnection()
+                //clearConnection()
             }
         }
 
@@ -278,7 +278,7 @@ const connectToWhatsApp = async (id, io) => {
                 io.emit('message', {token: token, message: "Reconectando"})
             } else {
                 io.emit('message', {token: token, message: lastDisconnect.error.output.payload.message, error: lastDisconnect.error.output.payload.error})
-                clearConnection(token)
+                //clearConnection(token)
             }
         }
     })
